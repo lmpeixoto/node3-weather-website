@@ -1,15 +1,12 @@
 const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
-const forecast = require('./utils/forecast')
 const geocode = require('./utils/geocode')
-
-console.log(__dirname)
-console.log(path.join(__dirname, '../public'))
+const forecast = require('./utils/forecast')
 
 const app = express()
 
-//  Define paths for Express config
+// Define paths for Express config
 const publicDirectoryPath = path.join(__dirname, '../public')
 const viewsPath = path.join(__dirname, '../templates/views')
 const partialsPath = path.join(__dirname, '../templates/partials')
@@ -31,20 +28,20 @@ app.get('', (req, res) => {
 
 app.get('/about', (req, res) => {
     res.render('about', {
-        title: 'About',
+        title: 'About Me',
         name: 'Andrew Mead'
     })
 })
 
 app.get('/help', (req, res) => {
     res.render('help', {
+        helpText: 'This is some helpful text.',
         title: 'Help',
-        name: 'Andrew Mead',
-        message: 'This page serves the purpose of helping you with your questions.'
+        name: 'Andrew Mead'
     })
 })
 
-aapp.get('/weather', (req, res) => {
+app.get('/weather', (req, res) => {
     if (!req.query.address) {
         return res.send({
             error: 'You must provide an address!'
@@ -70,10 +67,14 @@ aapp.get('/weather', (req, res) => {
     })
 })
 
-
-
 app.get('/products', (req, res) => {
-    console.log(req.query)
+    if (!req.query.search) {
+        return res.send({
+            error: 'You must provide a search term'
+        })
+    }
+
+    console.log(req.query.search)
     res.send({
         products: []
     })
@@ -82,16 +83,16 @@ app.get('/products', (req, res) => {
 app.get('/help/*', (req, res) => {
     res.render('404', {
         title: '404',
-        errorMessage: 'Help article not found!',
-        name: 'Andrew Mead'
+        name: 'Andrew Mead',
+        errorMessage: 'Help article not found.'
     })
 })
 
 app.get('*', (req, res) => {
     res.render('404', {
         title: '404',
-        errorMessage: 'Page not found!',
-        name: 'Andrew Mead'
+        name: 'Andrew Mead',
+        errorMessage: 'Page not found.'
     })
 })
 
